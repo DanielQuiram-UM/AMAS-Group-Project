@@ -21,7 +21,7 @@ class VoteCounter:
     @staticmethod
     def count_and_sort(votes):
         frequency = Counter(votes)
-        return sorted(frequency.items(), key=lambda x: x[1], reverse=True)
+        return sorted(frequency.items(), key=lambda x: (-x[1], x[0]))
 
     @staticmethod
     def plurality(matrix):
@@ -50,4 +50,4 @@ class VoteCounter:
             for position, candidate in enumerate(row):
                 borda_scores[candidate] += (num_candidates - 1 - position)
 
-        return sorted(borda_scores.items(), key=lambda x: x[1], reverse=True)
+        return sorted(borda_scores.items(), key=lambda x: (-x[1], x[0]))
