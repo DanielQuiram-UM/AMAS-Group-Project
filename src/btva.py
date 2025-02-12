@@ -110,6 +110,20 @@ class BTVA:
         tuple = self.check_strategic_voting(scheme)
         
         return tuple
+    
+    def display_risk(self, tuple):
+        """Displays the risk of strategic voting."""
+        print("\n==== Strategic Voting Risk ====")
+        
+        risk = 0
+        for i in range(self.n):
+            if len(tuple[i]) > 0:
+                risk += 1
+                
+        risk = risk / self.n
+        print(f"Risk of Strategic Voting: {risk:.2f}")
+        
+        return risk
 
     def get_matrix(self):
         return self.preference_matrix
