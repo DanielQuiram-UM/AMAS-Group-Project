@@ -1,15 +1,16 @@
 from btva import BTVA
-from src.vote_counter import VoteCounter
+from vote_counter import VoteCounter
 from election_report import ElectionReport
 
 def main():
-    n = 2
-    m = 2
+    n = 4
+    m = 4
 
     TVA = BTVA(n, m)
     TVA.setup()
 
-    TVA.display_results("borda")
+    tuple = TVA.display_results("borda")
+    
 
 if __name__ == "__main__":
     main()

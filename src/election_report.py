@@ -1,4 +1,4 @@
-from src.vote_counter import VoteCounter
+from vote_counter import VoteCounter
 
 class ElectionReport:
     @staticmethod

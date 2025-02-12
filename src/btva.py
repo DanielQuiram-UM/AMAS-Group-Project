@@ -9,6 +9,7 @@ class BTVA:
         self.n = n  # Number of voters
         self.m = m  # Number of candidates
         self.preference_matrix = None
+        self.result_tuple = [[] for _ in range(self.n)]
 
     def setup(self):
         alternatives = [chr(65 + i) for i in range(self.m)]  # Candidate names: A, B, C, etc.
@@ -28,6 +29,13 @@ class BTVA:
         else:
             # Gradually decrease happiness for lower preferences
             return 1 - (vote.index(winner) / (len(vote) - 1))
+        
+    def calculate_overall_happiness(self, matrix, winner):
+        """Calculate the overall happiness of the voters."""
+        overall_happiness = 0
+        for vote in matrix:
+            overall_happiness += self.calculate_happiness(vote, winner)
+        return overall_happiness / self.n
 
     def check_strategic_voting(self, scheme):
         """Checks if a voter can change the election outcome by voting differently."""
@@ -39,15 +47,13 @@ class BTVA:
         for i in range(self.n):
             original_vote = matrix[i]
             original_happiness = self.calculate_happiness(original_vote, original_winner)
+            
+            # Calculate the overall happiness of the voters
+            overall_happiness = self.calculate_overall_happiness(matrix, original_winner)
 
             # Skip if the voter's top choice is already the winner
             if original_happiness == 1:
                 continue
-
-            # Remove voter's vote and check new winner
-            temp_matrix = matrix[:i] + matrix[i + 1:]
-            temp_preference_matrix = PreferenceMatrix(temp_matrix)
-            new_winner_without_voter = VoteCounter.show_results(scheme, temp_preference_matrix)[0][0]
 
             print(f"\nVoter {i + 1} may influence the election:")
             print(f"  - Current vote: {' > '.join(original_vote)}")
@@ -55,12 +61,10 @@ class BTVA:
             print(f"  - Original Voter Happiness: {original_happiness:.2f}")
 
             # Step 1: Generate all permutations of the original vote and check happiness
-            best_happiness = original_happiness
-            best_permutation = original_vote
-            best_new_winner = original_winner
-
+            better_results = []
+            
             for permuted_vote in permutations(original_vote):
-
+                
                 # Create a new modified matrix with the permuted vote
                 modified_matrix = matrix[:i] + [list(permuted_vote)] + matrix[i + 1:]
                 modified_preference_matrix = PreferenceMatrix(modified_matrix)
@@ -70,17 +74,32 @@ class BTVA:
                 new_happiness = self.calculate_happiness(original_vote, modified_winner)
 
                 # Check if this permutation results in higher happiness
-                if new_happiness > best_happiness:
-                    best_happiness = new_happiness
-                    best_permutation = permuted_vote
-                    best_new_winner = modified_winner
-
+                
+                if new_happiness > original_happiness:
+                    better_results.append({
+                        "happiness": new_happiness,
+                        "permutation": permuted_vote,
+                        "new_winner": modified_winner
+                    })
+            
             # After checking all permutations, we return the best result
-            if best_happiness > original_happiness:
-                print(f"  - Strategic vote: {' > '.join(best_permutation)} → New Winner: {best_new_winner}")
-                print(f"    → Voter's Happiness Increases to: {best_happiness:.2f}")
+                
+            if len(better_results) >= 1:
+                for result in better_results:
+                    
+                    # Calculate new overall happiness
+                    new_matrix = matrix[:i] + [list(result['permutation'])] + matrix[i + 1:]
+                    new_overall_happiness = self.calculate_overall_happiness(new_matrix, result['new_winner'])
+                    
+                    # Save a better result for the current voter in the result_tuple
+                    self.result_tuple[i].append([result['permutation'], result['new_winner'], result['happiness'], original_happiness, new_overall_happiness, overall_happiness])
+    
+                    print(f"  - Strategic vote: {' > '.join(result['permutation'])} → New Winner: {result['new_winner']}")
+                    print(f"    → Voter's Happiness Increases to: {result['happiness']:.2f}")
             else:
                 print(f"  - No strategic vote found that increases happiness.")
+        
+        return self.result_tuple
 
     def display_results(self, scheme):
         """Displays the voting results and strategic voting information."""
@@ -88,7 +107,9 @@ class BTVA:
         original_winner = self.get_winner(scheme)
         print(f"\nWinner using {scheme}: {original_winner}")
 
-        self.check_strategic_voting(scheme)
+        tuple = self.check_strategic_voting(scheme)
+        
+        return tuple
 
     def get_matrix(self):
         return self.preference_matrix
