@@ -5,16 +5,12 @@ from vote_counter import VoteCounter
 
 
 class BTVA:
-    def __init__(self, n, m):
+    def __init__(self, n, m, scheme, preference_matrix):
         self.n = n  # Number of voters
         self.m = m  # Number of candidates
-        self.preference_matrix = None
+        self.scheme = scheme  # Voting scheme
+        self.preference_matrix = preference_matrix
         self.result_tuple = [[] for _ in range(self.n)]
-
-    def setup(self):
-        alternatives = [chr(65 + i) for i in range(self.m)]  # Candidate names: A, B, C, etc.
-        votes = [random.sample(alternatives, len(alternatives)) for _ in range(self.n)]
-        self.preference_matrix = PreferenceMatrix(votes)
 
     def get_winner(self, scheme, preference_matrix=None):
         """Returns the winner based on the given voting scheme."""
