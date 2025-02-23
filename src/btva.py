@@ -130,25 +130,41 @@ class BTVA:
     def generate_output(self):
         output = {}
 
+        # Non-strategic winner
         original_winner = self.get_winner(self.scheme)
 
+        # Calculate individual happiness levels
         happiness_levels = []
         for i, vote in enumerate(self.preference_matrix.matrix):
             happiness = self.calculate_happiness(vote, original_winner)
             happiness_levels.append(happiness)
 
+        # Calculate the true overall happiness (before strategic voting)
         H = sum(happiness_levels)
 
         strategic_voting_options = []
+
         for i in range(self.n):
             strategic_votes = self.get_strategic_votes(self.scheme, i)
             voter_options = []
 
             for vote in strategic_votes:
-                modified_happiness = self.calculate_overall_happiness(vote, self.scheme, i)
-                modified_winner = self.get_winner(self.scheme, PreferenceMatrix([list(vote)]))
+                original_vote = self.preference_matrix.matrix[i]
+
+                # Create a modified matrix with the current voter's strategic vote
+                modified_matrix = [list(v) for v in self.preference_matrix.matrix]  # Copy original votes
+                modified_matrix[i] = list(vote)  # Replace the original vote with the strategic vote
+
+                # Determine the new winner after the modified vote (using modified matrix)
+                modified_winner = self.get_winner(self.scheme, PreferenceMatrix(modified_matrix))
+
+                # Calculate happiness for the modified vote using the original (not modified) vote
+                modified_happiness = self.calculate_happiness(original_vote, modified_winner)
+
+                # Calculate the modified overall happiness using the original preferences of all voters
                 modified_overall_happiness = sum(
-                    self.calculate_happiness(vote, modified_winner) for vote in self.preference_matrix.matrix) / self.n
+                    self.calculate_happiness(original_vote, modified_winner) for original_vote in
+                    self.preference_matrix.matrix)
 
                 original_happiness = happiness_levels[i]
 
@@ -173,3 +189,6 @@ class BTVA:
         output['risk_of_strategic_voting'] = risk_of_strategic_voting
 
         return output
+
+
+
