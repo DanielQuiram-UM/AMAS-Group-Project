@@ -126,3 +126,50 @@ class BTVA:
 
     def get_matrix(self):
         return self.preference_matrix
+
+    def generate_output(self):
+        output = {}
+
+        original_winner = self.get_winner(self.scheme)
+
+        happiness_levels = []
+        for i, vote in enumerate(self.preference_matrix.matrix):
+            happiness = self.calculate_happiness(vote, original_winner)
+            happiness_levels.append(happiness)
+
+        H = sum(happiness_levels)
+
+        strategic_voting_options = []
+        for i in range(self.n):
+            strategic_votes = self.get_strategic_votes(self.scheme, i)
+            voter_options = []
+
+            for vote in strategic_votes:
+                modified_happiness = self.calculate_overall_happiness(vote, self.scheme, i)
+                modified_winner = self.get_winner(self.scheme, PreferenceMatrix([list(vote)]))
+                modified_overall_happiness = sum(
+                    self.calculate_happiness(vote, modified_winner) for vote in self.preference_matrix.matrix) / self.n
+
+                original_happiness = happiness_levels[i]
+
+                voter_options.append({
+                    'voter_index': i,
+                    'modified_vote': vote,
+                    'modified_winner': modified_winner,
+                    'modified_happiness': modified_happiness,
+                    'modified_overall_happiness': modified_overall_happiness,
+                    'original_happiness': original_happiness,
+                    'overall_happiness': H
+                })
+
+            strategic_voting_options.append(voter_options)
+
+        risk_of_strategic_voting = sum(1 for i in range(self.n) if strategic_voting_options[i]) / self.n
+
+        output['non_strategic_winner'] = original_winner
+        output['individual_happiness_levels'] = happiness_levels
+        output['overall_happiness'] = H
+        output['strategic_voting_options'] = strategic_voting_options
+        output['risk_of_strategic_voting'] = risk_of_strategic_voting
+
+        return output
