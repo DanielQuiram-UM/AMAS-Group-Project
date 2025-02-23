@@ -3,9 +3,11 @@ from output import OutputPrinter
 from voting_setup import VotingSetup
 
 def main():
-    n = 3  # Number of voters
+    n = 4  # Number of voters
     m = 4  # Number of candidates
-    scheme = "voting_for_two"  # Voting scheme (e.g., "voting_for_two", "borda", etc.)
+
+    # Voting scheme ("voting_for_two", "borda", "plurality", "anti_plurality")
+    scheme = "plurality"
 
     preference_matrix = VotingSetup.generate_preference_matrix(n, m)
 

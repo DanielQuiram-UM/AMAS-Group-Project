@@ -21,10 +21,10 @@ class OutputPrinter:
                     # New happiness, old happiness, new overall happiness, old overall happiness
                     print(f"  - Modified Vote: {' > '.join(option['modified_vote'])}, "
                           f"Modified Winner: {option['modified_winner']}, "
-                          f"New Happiness (H̃i): {option['modified_happiness']:.2f}, "
-                          f"Old Happiness (Hi): {option['original_happiness']:.2f}, "
-                          f"New Overall Happiness (H̃): {option['modified_overall_happiness']:.2f}, "
-                          f"Old Overall Happiness (H): {option['overall_happiness']:.2f}")
+                          f"New Happiness: {option['modified_happiness']:.2f}, "
+                          f"Old Happiness: {option['original_happiness']:.2f}, "
+                          f"New Overall Happiness: {option['modified_overall_happiness']:.2f}, "
+                          f"True (Old) Overall Happiness: {option['overall_happiness']:.2f}")
             else:
                 print("  No strategic voting options available.")
 
