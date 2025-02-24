@@ -13,8 +13,8 @@ def run_btvavote(i, n, m, scheme):
 
 def main():
     n = 5  # Number of voters
-    m = 5  # Number of candidates
-    scheme = "plurality"
+    m = 3  # Number of candidates
+    scheme = "voting_for_two"
 
     # Number of iterations
     num_iterations = 10000
@@ -34,7 +34,10 @@ def main():
             results.append(result)
 
     # Once all results are gathered, calculate and print the averages
-    OutputPrinter.print_average_results(scheme, n, m, results)
+    if num_iterations == 1:
+        OutputPrinter.print_output(result)
+    else:
+        OutputPrinter.print_average_results(scheme, n, m, results)
 
 
 if __name__ == "__main__":
