@@ -1,25 +1,41 @@
 from btva import BTVA
 from output import OutputPrinter
 from voting_setup import VotingSetup
+from concurrent.futures import ProcessPoolExecutor, as_completed
+
+
+def run_btvavote(i, n, m, scheme):
+    preference_matrix = VotingSetup.generate_random_matrix(n, m)
+    TVA = BTVA(n, m, scheme, preference_matrix)
+    result = TVA.generate_output()
+    return result
+
 
 def main():
-    n = 4  # Number of voters
-    m = 4  # Number of candidates
-
-    # Voting scheme ("voting_for_two", "borda", "plurality", "anti_plurality")
+    n = 10  # Number of voters
+    m = 5  # Number of candidates
     scheme = "plurality"
 
-    preference_matrix = VotingSetup.generate_preference_matrix(n, m)
+    # Number of iterations
+    num_iterations = 1
 
-    TVA = BTVA(n, m, scheme, preference_matrix)
+    # Use a ProcessPoolExecutor to parallelize the computations
+    results = []
+    with ProcessPoolExecutor() as executor:
+        futures = []
 
-    print("Initial Voting (Preference Matrix):")
-    for i, vote in enumerate(preference_matrix.matrix):
-        print(f"Voter {i + 1}: {' < '.join(vote)}")
+        # Submit tasks to the pool of workers
+        for i in range(num_iterations):
+            futures.append(executor.submit(run_btvavote, i, n, m, scheme))
 
-    result = TVA.generate_output()
+        # Gather results as they complete
+        for future in as_completed(futures):
+            result = future.result()
+            results.append(result)
 
-    OutputPrinter.print_output(result)
+    # Once all results are gathered, calculate and print the averages
+    OutputPrinter.print_average_results(scheme, n, m, results)
+
 
 if __name__ == "__main__":
     main()
