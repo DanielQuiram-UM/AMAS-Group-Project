@@ -51,7 +51,7 @@ class OutputPrinter:
 
         new_happiness_values, old_happiness_values = [], []
         new_overall_happiness_values, true_old_overall_happiness_values = [], []
-        total_strategic_options = 0
+        total_strategic_options = 0  # Initialize to track total number of strategic options
         total_voters_with_strategic_voting = 0
         total_candidates_with_strategic_options = 0
         total_voting_options = 0
@@ -67,6 +67,7 @@ class OutputPrinter:
                     has_strategic_voting = True
                     num_voters_with_options += 1
                     total_options_for_voters_with_options += len(options)
+                    total_strategic_options += len(options)  # Add the count of strategic options here
                     for option in options:
                         new_happiness_values.append(option['modified_happiness'])
                         old_happiness_values.append(option['original_happiness'])
@@ -83,8 +84,6 @@ class OutputPrinter:
         avg_old_happiness = sum(old_happiness_values) / len(old_happiness_values) if old_happiness_values else 0
         avg_new_overall_happiness = sum(new_overall_happiness_values) / len(
             new_overall_happiness_values) if new_overall_happiness_values else 0
-        avg_true_old_overall_happiness = sum(true_old_overall_happiness_values) / len(
-            true_old_overall_happiness_values) if true_old_overall_happiness_values else 0
 
         # Calculate percentage of votings dependent on strategic voting
         percentage_strategic_voting = (total_voters_with_strategic_voting / len(results)) * 100 if len(
@@ -103,9 +102,9 @@ class OutputPrinter:
             ["Voting Scheme", voting_scheme],
             ["Number of Voters", num_voters],
             ["Number of Candidates", num_candidates],
-            ["Average Overall Happiness", f"{avg_happiness:.2f}"],
+            ["Average Overall Happiness", f"{avg_happiness:.2f}"],  # Display Average Overall Happiness
             ["Average Risk of Strategic Voting", f"{avg_risk:.2f}"],
-            ["Total Strategic Voting Options", total_strategic_options],
+            ["Total Strategic Voting Options", total_strategic_options],  # Display total strategic options
             ["Percentage of Votings Dependent on Strategic Voting", f"{percentage_strategic_voting:.2f}%"],
             ["Average Candidates with Strategic Voting Options", f"{avg_candidates_with_strategic_options:.2f}"],
             ["Average Voting Options for Voters with Strategic Voting", f"{avg_voting_options:.2f}"]
@@ -116,8 +115,8 @@ class OutputPrinter:
         strategy_impact_table = [
             ["Average New Happiness", f"{avg_new_happiness:.2f}"],
             ["Average Old Happiness", f"{avg_old_happiness:.2f}"],
-            ["Average New Overall Happiness", f"{avg_new_overall_happiness:.2f}"],
-            ["Average True Old Overall Happiness", f"{avg_true_old_overall_happiness:.2f}"]
+            ["Average New Overall Happiness", f"{avg_new_overall_happiness:.2f}"]
         ]
         print("\nAverage Strategic Voting Impact:")
         print(tabulate(strategy_impact_table, tablefmt="grid"))
+
