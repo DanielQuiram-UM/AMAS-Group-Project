@@ -20,22 +20,30 @@ class ATVA_MV(TVA):
         all_permutations = self.get_multiple_voting_permutations(tuple)
         tuple = self.check_permutations_happiness(tuple, all_permutations, scheme)
         
-
-        print(f"All Voter Preferences with only multiple strategic voting:")
+        if(len(all_permutations) > 0):
+            print(f"All Voter Preferences with only multiple strategic voting:")
+        else:
+            print(f"No multiple strategic voting found.\n")
         
         for i in range(self.n):
-            # if(len(tuple[i])>0):
-            #     print(f"\nVoter {i + 1} may influence the election:")
-            #     print(f"  - Original Voter Happiness: {tuple[i][0][3]:.2f}")
             
             for result in tuple[i]:
                 if(len(result)==7):
                     print(PreferenceMatrix(result[6]))
+                    changed_votes = []
+                    for j in range(self.n):
+                        if result[6][j] != self.preference_matrix.matrix[j]:
+                            changed_votes.append(j+1)
+                    print(f"  - Changed Votes: {changed_votes}")
+                    
                     print(f"  - Voter: {i + 1}")
-                    print(f"  - Strategic vote: {' > '.join(result[0])}")
+                    print(f"  - Original vote: {' > '.join(map(str, self.preference_matrix.matrix[i]))}")
+                    print(f"  → Strategic vote: {' > '.join(map(str, result[0]))}")
+                    print(f"  - Original Winner: {original_winner}")        
                     print(f"  → New Winner: {result[1]}")
-                    print(f"  → Voter's Original Happiness: {result[3]:.2f}")
+                    print(f"  - Voter's Original Happiness: {result[3]:.2f}")
                     print(f"  → Voter's Happiness Increases to: {result[2]:.2f}")
+                    print(f"  - Original Overall Happiness: {result[5]:.2f}")
                     print(f"  → Overall Happiness changed to: {result[4]:.2f}\n")
             
         return tuple
@@ -95,7 +103,7 @@ class ATVA_MV(TVA):
         return self.result_tuple
 
     def get_multiple_voting_permutations(self, tuple_list):
-        """Generates all permutations of the given matrix."""
+        """Generates all permutations of the given matrix with at least two votes from the tuple_list."""
         def generate_permutations(matrix, index):
             if index == len(matrix):
                 return [[]]
@@ -103,7 +111,7 @@ class ATVA_MV(TVA):
             if len(tuple_list[index]) > 0:
                 for result in tuple_list[index]:
                     for perm in generate_permutations(matrix, index + 1):
-                        current_permutations.append(list([result[0]]) + list(perm))
+                        current_permutations.append([result[0]] + perm)
             else:
                 for perm in generate_permutations(matrix, index + 1):
                     current_permutations.append([self.preference_matrix.matrix[index]] + perm)
@@ -116,23 +124,31 @@ class ATVA_MV(TVA):
         original_permutation = [self.preference_matrix.matrix[i] for i in range(self.n)]
         all_permutations = [perm for perm in all_permutations if perm != original_permutation]
         
-        return all_permutations
+        # Filter permutations to include only those with at least two votes from tuple_list
+        filtered_permutations = []
+        for perm in all_permutations:
+            count = sum(1 for i in range(self.n) if perm[i] != self.preference_matrix.matrix[i])
+            if count >= 2:
+                filtered_permutations.append(perm)
+        
+        return filtered_permutations
                     
     def check_permutations_happiness(self, tuple, all_permutations, scheme):
         print("\n==== Checking Tactical Permutations ====")
         for permutation in all_permutations:
-            print(permutation)
+            print([list(p) for p in permutation])
             for i in range(self.n):
-                
+                old_vote = self.preference_matrix.matrix[i]
+                new_vote = permutation[i]
                 #Check if the permutation includes a new vote permutation for the current voter
-                if(self.preference_matrix.matrix[i] != permutation[i]):
+                if(old_vote != new_vote):
                     
                     #Check if the happiness increased for the current voter
                     original_winner = self.get_winner(scheme)
                     original_happiness = tuple[i][0][3]
                     original_overall_happiness = tuple[i][0][5]
                     new_winner = VoteCounter.show_results(scheme, PreferenceMatrix(permutation))[0][0]
-                    new_happiness = self.calculate_happiness(permutation[i], new_winner)
+                    new_happiness = self.calculate_happiness(old_vote, new_winner)
                     if(new_happiness > original_happiness):
                         
                         #Calculate the new overall happiness
@@ -140,8 +156,8 @@ class ATVA_MV(TVA):
                         new_overall_happiness = self.calculate_overall_happiness(new_matrix, original_winner)
                         
                         #Save the new result in the result_tuple
-                        tuple[i].append([permutation[i], new_winner, new_happiness, original_happiness, new_overall_happiness, original_overall_happiness, new_matrix])
-        print("==== Permutations Checked ====\n")
+                        tuple[i].append([new_vote, new_winner, new_happiness, original_happiness, new_overall_happiness, original_overall_happiness, new_matrix])
+        print("====      Permutations Checked      ====\n")
         return tuple
     
     def display_risk(self, tuple):
@@ -155,5 +171,3 @@ class ATVA_MV(TVA):
                 
         risk = risk / self.n
         print(f"Risk of Strategic Voting: {risk:.2f}")
-        
-        return risk

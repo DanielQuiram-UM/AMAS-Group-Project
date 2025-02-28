@@ -1,5 +1,3 @@
-from collections import Counter
-from itertools import permutations
 import random
 from preference_matrix import PreferenceMatrix
 from vote_counter import VoteCounter

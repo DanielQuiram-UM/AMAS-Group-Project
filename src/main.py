@@ -1,16 +1,15 @@
 from btva import BTVA
 from atva_multiple_voting import ATVA_MV
-from vote_counter import VoteCounter
-from election_report import ElectionReport
 
 def main():
     n = 4
     m = 3
     
-    #TVA.setup()
+    #btva= BTVA(n, m)
+    #btva.setup()
 
-    #tuple = TVA.display_results("borda")
-    #risk = TVA.display_risk(tuple)
+    #tuple = btva.display_results("anti_plurality")
+    #risk = btva.display_risk(tuple)
     
     
     ##############################
@@ -21,6 +20,7 @@ def main():
     ATVA_4.setup()
     
     tuple_list = ATVA_4.display_results("borda")
+    ATVA_4.display_risk(tuple_list)
 
     
 

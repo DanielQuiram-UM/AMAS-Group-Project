@@ -71,7 +71,7 @@ class BTVA:
                 modified_winner = VoteCounter.show_results(scheme, modified_preference_matrix)[0][0]
 
                 # Calculate happiness for the current permutation
-                new_happiness = self.calculate_happiness(original_vote, modified_winner)
+                new_happiness = self.calculate_happiness(list(original_vote), modified_winner)
 
                 # Check if this permutation results in higher happiness
                 
