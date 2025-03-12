@@ -2,8 +2,8 @@ from btva import BTVA
 from atva_multiple_voting import ATVA_MV
 
 def main():
-    n = 4
-    m = 3
+    n = 7
+    m = 7
     
     #btva= BTVA(n, m)
     #btva.setup()
@@ -19,8 +19,7 @@ def main():
     ATVA_4 = ATVA_MV(n, m)
     ATVA_4.setup()
     
-    tuple_list = ATVA_4.display_results("borda")
-    ATVA_4.display_risk(tuple_list)
+    ATVA_4.display_results("plurality")
 
     
 

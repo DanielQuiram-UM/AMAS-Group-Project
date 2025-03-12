@@ -88,8 +88,7 @@ class BTVA:
                 for result in better_results:
                     
                     # Calculate new overall happiness
-                    new_matrix = matrix[:i] + [list(result['permutation'])] + matrix[i + 1:]
-                    new_overall_happiness = self.calculate_overall_happiness(new_matrix, result['new_winner'])
+                    new_overall_happiness = self.calculate_overall_happiness(matrix, result['new_winner'])
                     
                     # Save a better result for the current voter in the result_tuple
                     self.result_tuple[i].append([result['permutation'], result['new_winner'], result['happiness'], original_happiness, new_overall_happiness, overall_happiness])
