@@ -41,8 +41,7 @@ class BTVA:
         """Checks if a voter can change the election outcome by voting differently."""
         matrix = self.preference_matrix.matrix
         original_winner = self.get_winner(scheme)
-
-        print("\nChecking for Strategic Voting...\n")
+        is_strategic_voting_possible = False
 
         for i in range(self.n):
             original_vote = matrix[i]
@@ -76,6 +75,7 @@ class BTVA:
                 # Check if this permutation results in higher happiness
                 
                 if new_happiness > original_happiness:
+                    is_strategic_voting_possible = True
                     better_results.append({
                         "happiness": new_happiness,
                         "permutation": permuted_vote,
@@ -95,8 +95,14 @@ class BTVA:
     
                     print(f"  - Strategic vote: {' > '.join(result['permutation'])} → New Winner: {result['new_winner']}")
                     print(f"    → Voter's Happiness Increases to: {result['happiness']:.2f}")
+                    print(f"    → Original Overall Happiness: {overall_happiness:.2f}")
+                    print(f"    → Overall Happiness Changed to: {new_overall_happiness:.2f}")
             else:
                 print(f"  - No strategic vote found that increases happiness.")
+        
+        if(not is_strategic_voting_possible):
+            print (f"\nNo strategic voting possible.")  
+            print(f"Original Overall Happiness: {overall_happiness:.2f}")
         
         return self.result_tuple
 
@@ -105,7 +111,7 @@ class BTVA:
         print(self.preference_matrix)
         original_winner = self.get_winner(scheme)
         print(f"\nWinner using {scheme}: {original_winner}")
-
+        print("\nChecking for Strategic Voting...\n")
         tuple = self.check_strategic_voting(scheme)
         
         return tuple
