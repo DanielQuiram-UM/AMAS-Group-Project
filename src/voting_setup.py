@@ -1,5 +1,6 @@
 import random
-from preference_matrix import PreferenceMatrix
+from src.preference_matrix import PreferenceMatrix
+
 
 class VotingSetup:
     @staticmethod

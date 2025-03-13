@@ -12,9 +12,9 @@ def run_btvavote(i, n, m, scheme):
 
 
 def main():
-    n = 5  # Number of voters
+    n = 3  # Number of voters
     m = 3  # Number of candidates
-    scheme = "voting_for_two"
+    scheme = "anti_plurality"
 
     # Number of iterations
     num_iterations = 10000

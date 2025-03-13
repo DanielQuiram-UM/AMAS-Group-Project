@@ -42,7 +42,7 @@ class OutputPrinter:
         num_candidates = m
 
         # Compute averages
-        avg_happiness = sum(r['overall_happiness'] for r in results) / len(results)
+        avg_happiness = sum(r['overall_happiness'] for r in results) / (len(results) * num_voters)
         avg_risk = sum(r['risk_of_strategic_voting'] for r in results) / len(results)
         avg_individual_happiness = [
             sum(r['individual_happiness_levels'][i] for r in results) / len(results)
