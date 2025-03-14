@@ -23,8 +23,12 @@ class ATVA_MV(TVA):
         if(new_permutation != []):
             tuple = self.check_permutations_happiness(tuple, new_permutation, scheme)
             self.display_risk(tuple)
+            return tuple
         else:
+            overall_happiness = self.calculate_overall_happiness(self.preference_matrix.matrix, original_winner)
+            print(f"Original Overall Happiness: {overall_happiness:.2f}")
             print(f"No multiple strategic voting found.\n")
+            return overall_happiness
 
     def check_strategic_voting(self, scheme):
         """Checks if a voter can change the election outcome by voting differently."""
