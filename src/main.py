@@ -7,23 +7,28 @@ from atva1 import ATVA1
 def main():
     n = 5
     m = 5
-    
+
     ##############################
     # BTVA
     ##############################
+
+    print("--------------------------------------------")
+    print("BTVA")
+    print("--------------------------------------------")
+
     btva= BTVA(n, m)
     btva.setup()
 
     tuple = btva.display_results("anti_plurality")
     btva.display_risk(tuple)
 
-    print("--------------------------------------------")
-    print("ATVA 1 - Collusive Voting")
-    print("--------------------------------------------")
-
     ##############################
     # ATVA_1
     ##############################
+
+    print("--------------------------------------------")
+    print("ATVA 1 - Collusive Voting")
+    print("--------------------------------------------")
     
     ##single run of ATVA1 (collusive voting)    
     TVA = BTVA(n, m)
@@ -54,26 +59,26 @@ def main():
     #     with open("output.txt", "a") as file:
     #         file.write(f"{scheme=}, {cumulative_risk/100=}, {cumulative_alert/100=} \n") 
 
-    print("--------------------------------------------")
-    print("ATVA 3 - Imperfect Knowledge")
-    print("--------------------------------------------")
-
     ##############################
     # ATVA_3 - imperfect knowledge
     ##############################
+
+    print("--------------------------------------------")
+    print("ATVA 3 - Imperfect Knowledge")
+    print("--------------------------------------------")
 
     ATVA_3 = ATVA_IK(n, m)
     ATVA_3.setup()
 
     ATVA_3.display_results("anti_plurality")
 
-    print("--------------------------------------------")
-    print("ATVA 4 - Multiple Voting")
-    print("--------------------------------------------")
-
     ##############################
     # ATVA_4 - multiple voting
     ##############################
+
+    print("--------------------------------------------")
+    print("ATVA 4 - Multiple Voting")
+    print("--------------------------------------------")
     
     #Single run
     
