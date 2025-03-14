@@ -1,9 +1,12 @@
 from btva import BTVA
 from atva_multiple_voting import ATVA_MV
+from atva_imperfect_knowledge import ATVA_IK
+from atva1 import ATVA1
+
 
 def main():
-    n = 3
-    m = 3
+    n = 5
+    m = 5
     
     ##############################
     # BTVA
@@ -13,7 +16,7 @@ def main():
 
     tuple = btva.display_results("anti_plurality")
     btva.display_risk(tuple)
-    
+
     ##############################
     # ATVA_1
     ##############################
@@ -48,20 +51,27 @@ def main():
     #         file.write(f"{scheme=}, {cumulative_risk/100=}, {cumulative_alert/100=} \n") 
     
     ##############################
-    # ATVA_3
+    # ATVA_3 - imperfect knowledge
     ##############################
+
+    ATVA_3 = ATVA_IK(n, m)
+    ATVA_3.setup()
+
+    ATVA_3.display_results("anti_plurality")
     
     ##############################
     # ATVA_4 - multiple voting
     ##############################
     
     #Single run
+    
     ATVA_4 = ATVA_MV(n, m)
     ATVA_4.setup()
     ATVA_4.display_results("voting_for_two")
 
     #Multiple runs (10 runs)
-        # overall_happiness = 0
+    
+    # overall_happiness = 0
     # new_overall_happiness = 0
     # average_risk = 0
     # for i in range(10):
