@@ -17,6 +17,10 @@ def main():
     tuple = btva.display_results("anti_plurality")
     btva.display_risk(tuple)
 
+    print("--------------------------------------------")
+    print("ATVA 1 - Collusive Voting")
+    print("--------------------------------------------")
+
     ##############################
     # ATVA_1
     ##############################
@@ -49,7 +53,11 @@ def main():
     #         print("")
     #     with open("output.txt", "a") as file:
     #         file.write(f"{scheme=}, {cumulative_risk/100=}, {cumulative_alert/100=} \n") 
-    
+
+    print("--------------------------------------------")
+    print("ATVA 3 - Imperfect Knowledge")
+    print("--------------------------------------------")
+
     ##############################
     # ATVA_3 - imperfect knowledge
     ##############################
@@ -58,7 +66,11 @@ def main():
     ATVA_3.setup()
 
     ATVA_3.display_results("anti_plurality")
-    
+
+    print("--------------------------------------------")
+    print("ATVA 4 - Multiple Voting")
+    print("--------------------------------------------")
+
     ##############################
     # ATVA_4 - multiple voting
     ##############################
